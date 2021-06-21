@@ -1,10 +1,10 @@
 #!/bin/bash
 
-while getopts :d: fname; do
+while getopts :d:c: fname; do
 
         case $fname in
                 d) TARGET=$OPTARG;;
-				c) collaborator=$OPTARG;;
+		c) collaborator=$OPTARG;;
                 *) echo "Invalid Operation $OPTARG";;
         esac
 done
