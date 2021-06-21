@@ -48,7 +48,7 @@ cat urls.txt | sort -u | httpx -silent >> allive.txt
 
 
 
-cat allive.txt | grep "=" | grep "?" | qsreplace 'http://$collaborator' >> ssrfuzz.txt
+cat allive.txt | grep "=" | grep "?" | qsreplace $collaborator >> ssrfuzz.txt
 
 
 ffuf -c -w ssrfuzz.txt -u FUZZ -t 400
