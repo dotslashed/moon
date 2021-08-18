@@ -30,6 +30,9 @@ cat subdomains_found.txt | sort -u >> final_subs.txt
 
 gau -subs $TARGET >> urls.txt
 
+gauplus -subs $TARGET -t 25 >> urls.txt
+
+cat final_subs.txt | gauplus -t 25 >> urls.txt
 
 
 waybackurls $TARGET >> urls.txt
@@ -40,15 +43,11 @@ cat final_subs.txt | waybackurls >> urls.txt
 
 
 
-gospider -q -S final_subs.txt -c 10 -d 1 >> urls.txt
-
-
-
 cat urls.txt | sort -u | httpx -silent >> allive.txt
 
 
 
-cat allive.txt | grep '?\|=' | qsreplace $collaborator >> ssrfuzz.txt
+cat allive.txt | grep "=" | grep "?" | qsreplace $collaborator >> ssrfuzz.txt
 
 
 ffuf -c -w ssrfuzz.txt -u FUZZ -t 400
