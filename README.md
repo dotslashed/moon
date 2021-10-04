@@ -1,4 +1,4 @@
-# labtest
+# moon
 # Tries to test for ssrf from waybackurls
 Usage:
 ./fun.sh -d [target] -c [burp collaborator url/ server url]
