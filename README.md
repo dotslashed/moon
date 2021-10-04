@@ -3,3 +3,4 @@
 Usage:
 ./fun.sh -d [target] -c [burp collaborator url/ server url]
 # NOT 100% accurate results. Manaul re-checking is required.
+Pre-Requires: subfinder, assetfinder, waybackurls, gau, gauplus, ffuf, a server address
