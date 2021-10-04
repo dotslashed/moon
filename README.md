@@ -1,5 +1,5 @@
 # labtest
-
+# Tries to test for ssrf from waybackurls
 Usage:
-./lbtest.sh -d [target] -c [burp collaborator address]
-NOT 100% accurate results. Manaul re-checking is required.
+./fun.sh -d [target] -c [burp collaborator url/ server url]
+# NOT 100% accurate results. Manaul re-checking is required.
